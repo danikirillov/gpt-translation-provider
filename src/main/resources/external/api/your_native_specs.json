@@ -1,0 +1,125 @@
+{
+  "components": {
+    "schemas": {
+      "YourResponse": {
+        "type": "object",
+        "properties": {
+          "messageList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "readOnly": true
+          },
+          "errorList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "readOnly": true
+          },
+          "warningList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "readOnly": true
+          },
+          "message": {
+            "type": "string",
+            "readOnly": true
+          },
+          "data": {
+            "type": "object",
+            "readOnly": true
+          }
+        }
+      },
+      "TranslationUpdate": {
+        "required": [
+          "orderId",
+          "targetLocale",
+          "translationResult"
+        ],
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "masterCopyKeyId": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "targetLocale": {
+            "pattern": "\\S",
+            "type": "string"
+          },
+          "translationResult": {
+            "pattern": "\\S",
+            "type": "string"
+          }
+        }
+      },
+      "java.lang.Object": {
+        "type": "object"
+      }
+    }
+  },
+  "openapi": "3.0.3",
+  "info": {
+    "contact": {
+      "email": "danilokirillov@icloud.com",
+      "name": "Daniil",
+      "url": "https://github.com/danikirillov"
+    },
+    "title": "Your API",
+    "version": "1.0.0",
+    "description": "bla bla"
+  },
+  "servers": [
+    {
+      "url": "https://yourapi.com/baa"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Your Service",
+      "description": "bla bla bla"
+    }
+  ],
+  "paths": {
+    "/api/translationupdate": {
+      "post": {
+        "summary": "Update translation for key by order id",
+        "description": "Update translation for key by order id.",
+        "operationId": "updateTranslationForKey",
+        "tags": [
+          "Your Service"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TranslationUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/YourResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

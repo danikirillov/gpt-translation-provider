@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/your_gpt_translation
+    username: your_user
+    password: your_password
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+
+logging:
+  level:
+    co.sheet.gpttranslationprovider: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.flywaydb: INFO

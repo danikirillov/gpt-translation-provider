@@ -1,0 +1,151 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "GPT Translation Provider API",
+    "contact": {
+      "name": "Daniil",
+      "url": "https://github.com/danikirillov",
+      "email": "danilokirillov@icloud.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "GptTranslationProvider",
+      "description": "Operations to translate a text into a target language using GPT"
+    }
+  ],
+  "paths": {
+    "/api/v1/translate": {
+      "post": {
+        "tags": [
+          "GptTranslationProvider"
+        ],
+        "operationId": "translate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TranslationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          }
+        }
+      }
+    },
+    "/api/v1/translateAll": {
+      "post": {
+        "tags": [
+          "GptTranslationProvider"
+        ],
+        "operationId": "translateAll",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/TranslationRequest"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          }
+        }
+      }
+    },
+    "/api/v1/refetchTranslations": {
+      "post": {
+        "tags": [
+          "GptTranslationProvider"
+        ],
+        "operationId": "refetchTranslations",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefetchTranslationsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TranslationRequest": {
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "masterCopyKeyId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "value": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sourceLocale": {
+            "type": "string",
+            "minLength": 1
+          },
+          "targetLocale": {
+            "type": "string",
+            "minLength": 1
+          },
+          "userId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "masterCopyKeyId",
+          "orderId",
+          "sourceLocale",
+          "targetLocale",
+          "userId",
+          "value"
+        ]
+      },
+      "RefetchTranslationsRequest": {
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "required": [
+          "orderId"
+        ]
+      }
+    }
+  }
+}
