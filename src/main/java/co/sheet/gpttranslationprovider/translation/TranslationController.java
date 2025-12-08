@@ -6,7 +6,6 @@ import co.sheet.gpttranslationprovider.open_ai.ReadyToTranslateEvent;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -16,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Tag(name = "GptTranslationProvider", description = "Operations to translate a text into a target language using GPT")
 @RestController
@@ -43,6 +44,7 @@ class TranslationController {
 
     @PostMapping("/refetchTranslations")
     @ResponseStatus(HttpStatus.ACCEPTED)
+    @Transactional
     void refetchTranslations(@RequestBody @Valid RefetchTranslationsRequest refetchRequest) {
         var orderToRefetch = refetchRequest.orderId();
         publisher.publishEvent(new RetryEvent(orderToRefetch));

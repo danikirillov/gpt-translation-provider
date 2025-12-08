@@ -33,8 +33,6 @@ spring:
   ai:
     openai:
       api-key: ${OPENAI_API_KEY}
-      project-id: proj_6aN3Tk54bq5KCK5vjLAGP4d5
-      organization-id: org-uMgz05fM7QaUsFHBBdhOOXpv
 
 server:
   port: 8080

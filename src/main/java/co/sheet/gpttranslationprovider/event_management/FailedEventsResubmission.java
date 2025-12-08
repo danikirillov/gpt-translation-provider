@@ -71,8 +71,8 @@ class FailedEventsService {
             var event = eventPublication.getEvent();
             return switch (event) {
                 case ReadyToTranslateEvent(TranslationRequest request) -> orderToRefetch.equals(request.orderId());
-                case TranslationReadyEvent(TranslationRequest request, String r) -> orderToRefetch.equals(request.orderId());
-                case RetryEvent e -> false; // no need in this case
+                case TranslationReadyEvent(TranslationRequest request, String _) -> orderToRefetch.equals(request.orderId());
+                case RetryEvent _ -> false; // no need in this case
                 default -> throw new IllegalStateException("Unexpected value: " + event);
             };
         };
