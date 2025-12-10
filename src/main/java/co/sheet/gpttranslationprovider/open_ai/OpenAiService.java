@@ -1,7 +1,6 @@
 package co.sheet.gpttranslationprovider.open_ai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import co.sheet.gpttranslationprovider.your_notification.TranslationReadyEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.model.ChatResponse;
@@ -10,13 +9,12 @@ import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.ai.openai.api.ResponseFormat;
 import org.springframework.ai.openai.api.ResponseFormat.Type;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.Profile;
-import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Slf4j
 @Service
@@ -24,7 +22,7 @@ import org.springframework.stereotype.Service;
 class OpenAiService {
 
     final OpenAiChatModel chatModel;
-    final ApplicationEventPublisher publisher;
+    final TranslationEventPublisher publisher;
     final ResponseMapper responseMapper;
 
     static final String RESPONSE_SCHEMA = """
@@ -68,7 +66,8 @@ class OpenAiService {
         - Ensure cultural appropriateness for the target locale
         """;
 
-    @ApplicationModuleListener
+    @Async
+    @TransactionalEventListener
     @Retryable(
         retryFor = {Exception.class},
         maxAttempts = 1,
@@ -94,7 +93,7 @@ class OpenAiService {
 
         var translationResult = responseMapper.map(chatResponse);
 
-        publisher.publishEvent(new TranslationReadyEvent(request, translationResult));
+        publisher.publishTranslationReady(request, translationResult);
         log.info("Translation ready for orderId={}, result='{}'", request.orderId(), translationResult);
     }
 }

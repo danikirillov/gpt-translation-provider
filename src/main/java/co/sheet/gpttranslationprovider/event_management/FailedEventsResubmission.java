@@ -1,20 +1,21 @@
 package co.sheet.gpttranslationprovider.event_management;
 
 import co.sheet.gpttranslationprovider.TranslationRequest;
-import co.sheet.gpttranslationprovider.your_notification.TranslationReadyEvent;
 import co.sheet.gpttranslationprovider.open_ai.ReadyToTranslateEvent;
+import co.sheet.gpttranslationprovider.your_notification.TranslationReadyEvent;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.modulith.events.EventPublication;
 import org.springframework.modulith.events.IncompleteEventPublications;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 @RequiredArgsConstructor
@@ -62,7 +63,8 @@ class FailedEventsService {
         }
     }
 
-    @ApplicationModuleListener
+    @Async
+    @TransactionalEventListener
     void resubmitByOrderId(RetryEvent retryEvent) {
         var orderToRefetch = retryEvent.orderId();
         log.info("Resubmitting failed events for orderId: {}", orderToRefetch);
@@ -71,7 +73,7 @@ class FailedEventsService {
             var event = eventPublication.getEvent();
             return switch (event) {
                 case ReadyToTranslateEvent(TranslationRequest request) -> orderToRefetch.equals(request.orderId());
-                case TranslationReadyEvent(TranslationRequest request, String _) -> orderToRefetch.equals(request.orderId());
+                case TranslationReadyEvent(TranslationRequest request, _) -> orderToRefetch.equals(request.orderId());
                 case RetryEvent _ -> false; // no need in this case
                 default -> throw new IllegalStateException("Unexpected value: " + event);
             };

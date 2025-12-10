@@ -6,7 +6,9 @@ import org.openapitools.client.api.YourServiceApi;
 import org.openapitools.client.model.TranslationUpdate;
 import org.springframework.context.annotation.Profile;
 import org.springframework.modulith.events.ApplicationModuleListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Profile("!local")
 @Slf4j
@@ -16,7 +18,8 @@ class YourNotificationService {
 
     final YourServiceApi yourApiClient;
 
-    @ApplicationModuleListener
+    @Async
+    @TransactionalEventListener
     void updateTranslationInYourApi(TranslationReadyEvent event) {
         var translationRequest = event.translationRequest();
         var translationUpdate = new TranslationUpdate()
