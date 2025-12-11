@@ -6,7 +6,7 @@ It is a demo project to showcase integration with OpenAI API for translation ser
 
 Please refer to [AGENTS.md](./AGENTS.md) for developer guidelines and repository structure.
 
-Find slides about it here - [slides placeholder]()
+Find slides about it here - [gpt-translation-provider.pptx](docs/gpt-translation-provider.pptx)
 
 ## Workflow diagrams
 ![img.png](docs/translation-workflow.png)
